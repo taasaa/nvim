@@ -31,8 +31,11 @@
 
 local M = {}
 
-function M.copy(_)
+local cache = { ['+'] = { '' }, ['*'] = { '' } }
+
+function M.copy(reg)
   return function(lines)
+    cache[reg] = lines
     local data = table.concat(lines, '\n')
     local encoded
     if vim.base64 then
@@ -46,9 +49,9 @@ function M.copy(_)
   end
 end
 
-function M.paste(_)
+function M.paste(reg)
   return function()
-    return { '' }
+    return cache[reg]
   end
 end
 
